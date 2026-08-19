@@ -1001,7 +1001,410 @@ a{color:inherit;}
 }
 </style>
 </head>
+<!-------------------------------->
+<!-- SCROLL ANIMATIONS — Inspired by premium sites -->
+<style>
+.sa-fade-up {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.9s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1);
+}
+.sa-fade-up.sa-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
+.sa-fade-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.9s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1);
+}
+.sa-fade-left.sa-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sa-fade-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.9s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1);
+}
+.sa-fade-right.sa-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.sa-scale {
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 0.9s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1);
+}
+.sa-scale.sa-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* تأخير تدريجي للبطاقات */
+.sa-delay-1 { transition-delay: 0.1s; }
+.sa-delay-2 { transition-delay: 0.2s; }
+.sa-delay-3 { transition-delay: 0.35s; }
+.sa-delay-4 { transition-delay: 0.5s; }
+/* ======= SCROLL VIDEO SOROR ======= */
+#progress-bar-soror {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #c8a96e, #e8c97e, #c8a96e);
+  width: 0%;
+  z-index: 9999;
+  box-shadow: 0 0 12px rgba(200,169,110,0.8);
+  transition: width 0.05s linear;
+  opacity: 0;
+}
+
+#scroll-track-soror {
+  height: 900vh;
+  position: relative;
+}
+
+#sticky-scene-soror {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sv-bg-layer {
+  position: absolute;
+  inset: 0;
+}
+
+#sv-bg-gradient {
+  background: radial-gradient(ellipse at 55% 50%, #1a1200 0%, #0a0800 70%);
+}
+
+#sv-bg-orb {
+  background: radial-gradient(
+    circle at var(--ox, 55%) var(--oy, 50%),
+    rgba(200,169,110,0.25) 0%,
+    rgba(180,120,40,0.12) 45%,
+    transparent 70%
+  );
+  filter: blur(50px);
+}
+
+#sv-video-wrap {
+  position: relative;
+  width: min(72vw, 950px);
+  aspect-ratio: 16/9;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(200,169,110,0.25),
+    0 40px 120px rgba(0,0,0,0.85),
+    0 0 80px rgba(200,169,110,0.12);
+  transform: scale(var(--vscale, 0.82));
+  z-index: 10;
+}
+
+#sv-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#sv-video-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(200,169,110,0.06) 0%,
+    transparent 50%,
+    rgba(0,0,0,0.2) 100%
+  );
+  pointer-events: none;
+}
+
+#sv-play-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+#sv-play-overlay.visible { opacity: 1; }
+
+#sv-play-overlay svg {
+  width: 70px;
+  height: 70px;
+  filter: drop-shadow(0 0 20px rgba(194, 161, 100, 0.9));
+}
+
+#sv-info-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.sv-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.sv-label {
+ 
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #d4af37;
+  font-weight: 700;
+  font-style: 700px;
+}
+
+.sv-value {
+  font-size: clamp(24px, 3.2vw, 42px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.1;
+  font-family: 'Playfair Display', serif;
+  font-size:100px;
+}
+
+.sv-sub {
+  
+  color: rgba(255, 255, 255, 0.48);
+  max-width: 230px;
+  line-height: 1.65;
+  font-size: 20px;
+}
+
+#sv-panel-1 { left: 4%; top: 18%; }
+#sv-panel-2 { right: 4%; top: 28%; text-align: right; }
+#sv-panel-3 { left: 4%; bottom: 22%; }
+#sv-panel-4 { right: 4%; bottom: 22%; text-align: right; }
+
+#sv-scroll-hint {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 20;
+  pointer-events: none;
+  color: rgba(200,169,110,0.7);
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  
+}
+
+.sv-arrow {
+  width: 20px;
+  height: 20px;
+  border-right: 2px solid #c8a96e;
+  border-bottom: 2px solid #c8a96e;
+  transform: rotate(45deg);
+  animation: sv-bounce 3.5s ease-in-out infinite;
+  font-style: 50px;
+}
+
+@keyframes sv-bounce {
+  0%, 100% { transform: rotate(45deg) translateY(0); opacity: 1; }
+  50%       { transform: rotate(45deg) translateY(7px); opacity: 0.35; }
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  #sv-video-wrap { width: 92vw; border-radius: 12px; }
+  #sv-panel-1, #sv-panel-3 { left: 3%; }
+  #sv-panel-2, #sv-panel-4 { right: 3%; }
+  .sv-sub { display: none; }
+}
+/* ======= END SCROLL VIDEO SOROR ======= */
+</style>
+
+<script>
+(function () {
+  /* --- تطبيق الكلاسات على العناصر الموجودة --- */
+  function applyClasses() {
+
+    /* بطاقات المنتجات / Services */
+    var cards = document.querySelectorAll('.product-card');
+    cards.forEach(function (el, i) {
+      el.classList.add('sa-fade-up');
+      el.classList.add('sa-delay-' + Math.min(i + 1, 4));
+    });
+
+    /* صور الغاليري */
+    var galleryCards = document.querySelectorAll('.gallery-card');
+    galleryCards.forEach(function (el, i) {
+      el.classList.add('sa-scale');
+      el.classList.add('sa-delay-' + Math.min((i % 4) + 1, 4));
+    });
+
+    /* بطاقات الفيديو */
+    var videoCards = document.querySelectorAll('.video-card');
+    videoCards.forEach(function (el, i) {
+      if (i % 2 === 0) {
+        el.classList.add('sa-fade-left');
+      } else {
+        el.classList.add('sa-fade-right');
+      }
+      el.classList.add('sa-delay-' + Math.min(i + 1, 4));
+    });
+
+    /* Section heads */
+    var heads = document.querySelectorAll('.section-head');
+    heads.forEach(function (el) {
+      if (!el.classList.contains('reveal')) {
+        el.classList.add('sa-fade-up');
+      }
+    });
+
+    /* Footer columns */
+    var footerCols = document.querySelectorAll('.footer-col, .footer-brand');
+    footerCols.forEach(function (el, i) {
+      el.classList.add('sa-fade-up');
+      el.classList.add('sa-delay-' + Math.min(i + 1, 4));
+    });
+
+    /* SEO copy */
+    var seoCopy = document.querySelectorAll('.seo-copy p');
+    seoCopy.forEach(function (el, i) {
+      el.classList.add('sa-fade-up');
+      el.classList.add('sa-delay-' + Math.min(i + 1, 4));
+    });
+  }
+
+  /* --- IntersectionObserver --- */
+  function startObserver() {
+    var allAnimated = document.querySelectorAll(
+      '.sa-fade-up, .sa-fade-left, .sa-fade-right, .sa-scale'
+    );
+
+    if (!('IntersectionObserver' in window)) {
+      allAnimated.forEach(function (el) { el.classList.add('sa-visible'); });
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('sa-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+    allAnimated.forEach(function (el) { io.observe(el); });
+  }
+
+  /* --- Parallax خفيف على صور البطاقات --- */
+  function initParallax() {
+    var imgs = document.querySelectorAll('.product-image img, .gallery-card img');
+    
+    window.addEventListener('scroll', function () {
+      var scrollY = window.pageYOffset;
+      imgs.forEach(function (img) {
+        var rect = img.getBoundingClientRect();
+        var centerY = rect.top + rect.height / 2;
+        var viewH = window.innerHeight;
+        var diff = (centerY - viewH / 2) / viewH;
+        img.style.transform = 'translateY(' + (diff * 18) + 'px) scale(1.06)';
+      });
+    }, { passive: true });
+  }
+
+  /* --- تأثير hover ثلاثي الأبعاد على البطاقات --- */
+  function init3DHover() {
+    var cards = document.querySelectorAll('.product-card, .video-card, .gallery-card');
+    cards.forEach(function (card) {
+      card.style.transition = 'transform 0.4s cubic-bezier(.22,1,.36,1), box-shadow 0.4s ease';
+      
+      card.addEventListener('mousemove', function (e) {
+        var rect = card.getBoundingClientRect();
+        var x = (e.clientX - rect.left) / rect.width - 0.5;
+        var y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform =
+          'perspective(800px) rotateX(' + (-y * 10) + 'deg) rotateY(' + (x * 10) + 'deg) translateY(-6px) scale(1.02)';
+        card.style.boxShadow = '0 20px 60px rgba(212,175,55,0.25)';
+      });
+
+      card.addEventListener('mouseleave', function () {
+        card.style.transform = '';
+        card.style.boxShadow = '';
+      });
+    });
+  }
+
+  /* --- تأثير النص يظهر حرفاً حرفاً (Split text) على العناوين --- */
+  function initSplitText() {
+    var titles = document.querySelectorAll('.section-head h2');
+    titles.forEach(function (el) {
+      var text = el.textContent;
+      el.textContent = '';
+      el.style.overflow = 'hidden';
+      text.split('').forEach(function (char, i) {
+        var span = document.createElement('span');
+        span.textContent = char === ' ' ? '\u00A0' : char;
+        span.style.cssText =
+          'display:inline-block;opacity:0;transform:translateY(30px);' +
+          'transition:opacity 0.5s ease ' + (i * 0.03) + 's, transform 0.5s cubic-bezier(.22,1,.36,1) ' + (i * 0.03) + 's;';
+        el.appendChild(span);
+      });
+
+      var titleIO = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            el.querySelectorAll('span').forEach(function (s) {
+              s.style.opacity = '1';
+              s.style.transform = 'translateY(0)';
+            });
+            titleIO.unobserve(el);
+          }
+        });
+      }, { threshold: 0.5 });
+      titleIO.observe(el);
+    });
+  }
+
+  /* --- شريط تقدم ذهبي عند السكرول --- */
+  function initProgressBar() {
+    var bar = document.getElementById('scrollProgress');
+    if (!bar) return;
+    bar.style.background = 'linear-gradient(90deg, #b38b24, #f7e7ce, #d4af37)';
+    bar.style.height = '3px';
+    bar.style.boxShadow = '0 0 8px rgba(212,175,55,0.6)';
+  }
+
+  /* تشغيل كل شيء */
+  document.addEventListener('DOMContentLoaded', function () {
+    applyClasses();
+    setTimeout(startObserver, 100);
+    initParallax();
+    init3DHover();
+    if ('IntersectionObserver' in window) initSplitText();
+    initProgressBar();
+  });
+})();
+</script>
 <body>
 
 <div class="scroll-progress" id="scrollProgress"></div>
@@ -1069,6 +1472,56 @@ a{color:inherit;}
     </div>
 </section>
 
+<!-- ===== SCROLL VIDEO SOROR ===== -->
+<div id="progress-bar-soror"></div>
+
+<section id="scroll-track-soror">
+  <div id="sticky-scene-soror">
+
+    <div class="sv-bg-layer" id="sv-bg-gradient"></div>
+    <div class="sv-bg-layer" id="sv-bg-orb"></div>
+
+    <div id="sv-video-wrap">
+      <video id="sv-video" muted playsinline preload="auto" src="a2.mp4"></video>
+      <div id="sv-play-overlay">
+        <svg viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="38" stroke="white" stroke-width="2" opacity="0.4"/>
+          <polygon points="32,24 60,40 32,56" fill="white"/>
+        </svg>
+      </div>
+    </div>
+
+    <div id="sv-info-container">
+      <div class="sv-panel" id="sv-panel-1">
+        <span class="sv-label">Années d'expérience</span>
+        <span class="sv-value">+15<br>Années</span>
+        <span class="sv-sub">نرافقكم في تنظيم أجمل المناسبات بمكناس وجميع المدن المغربية</span>
+      </div>
+      <div class="sv-panel" id="sv-panel-2">
+        <span class="sv-label">Une fête réussie</span>
+        <span class="sv-value">+500<br>fête</span>
+        <span class="sv-sub">أعراس، خطوبات، أعياد ميلاد وفعاليات راقية بلمسة Soror</span>
+      </div>
+      <div class="sv-panel" id="sv-panel-3">
+        <span class="sv-label"> Satisfaction des clients</span>
+        <span class="sv-value">100٪<br>Satisfaction</span>
+        <span class="sv-sub">خدمة متكاملة من الطعام والبوفيه إلى الديكور والاستقبال</span>
+      </div>
+      <div class="sv-panel" id="sv-panel-4">
+        <span class="sv-label">Réserve maintenant </span>
+        <span class="sv-value">Réserve <br> maintenant</span>
+        <span class="sv-sub">نصمم لك يومك المثالي حسب ميزانيتك ومناسبتك</span>
+      </div>
+    </div>
+
+    <div id="sv-scroll-hint">
+      <span>اسكرول للمشاهدة</span>
+      <div class="sv-arrow"></div>
+    </div>
+
+  </div>
+</section>
+<!-- ===== END SCROLL VIDEO SOROR ===== -->
 <div class="rule"></div>
 
 <!-- SEO INTRODUCTION / LOCAL SEO -->
@@ -1778,13 +2231,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // إيقاف التمرير التلقائي عند تمرير الماوس على الصور
     track.addEventListener("mouseenter", stopAutoPlay);
     track.addEventListener("mouseleave", function () {
         if (!isPlaying) startAutoPlay();
     });
 
-    // أزرار الأسهم
     nextBtn.addEventListener("click", function (e) {
         e.preventDefault();
         nextSlide();
@@ -1797,9 +2248,115 @@ document.addEventListener("DOMContentLoaded", function () {
 
     window.addEventListener("resize", updateSlider);
 
-    // تشغيل الحركة التلقائية عند التحميل
     startAutoPlay();
 });
+/* ======= SCROLL VIDEO SOROR ======= */
+(function () {
+  const track       = document.getElementById('scroll-track-soror');
+  const video       = document.getElementById('sv-video');
+  const progressBar = document.getElementById('progress-bar-soror');
+  const panels      = document.querySelectorAll('.sv-panel');
+  const scrollHint  = document.getElementById('sv-scroll-hint');
+  const bgOrb       = document.getElementById('sv-bg-orb');
+  const videoWrap   = document.getElementById('sv-video-wrap');
+  const playOverlay = document.getElementById('sv-play-overlay');
+
+  if (!track || !video) return;
+
+  const panelWindows = [
+    [0.08, 0.32],
+    [0.28, 0.52],
+    [0.48, 0.72],
+    [0.68, 0.94],
+  ];
+
+  let ticking = false;
+
+  video.addEventListener('loadedmetadata', () => {
+    video.currentTime = 0;
+    video.pause();
+    playOverlay.classList.add('visible');
+  });
+
+  document.addEventListener('mousemove', e => {
+    const ox = (e.clientX / window.innerWidth  * 100).toFixed(1) + '%';
+    const oy = (e.clientY / window.innerHeight * 100).toFixed(1) + '%';
+    bgOrb.style.setProperty('--ox', ox);
+    bgOrb.style.setProperty('--oy', oy);
+  });
+
+  function ease(t) {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
+
+  function getProgress() {
+    const rect  = track.getBoundingClientRect();
+    const total = track.offsetHeight - window.innerHeight;
+    return Math.min(Math.max(-rect.top / total, 0), 1);
+  }
+
+  function isInView() {
+    const rect = track.getBoundingClientRect();
+    return rect.top < window.innerHeight && rect.bottom > 0;
+  }
+
+  function update() {
+    const p       = getProgress();
+    const inView  = isInView();
+
+    // progress bar: show only when section is in view
+    progressBar.style.opacity = inView ? '1' : '0';
+    progressBar.style.width   = (p * 100) + '%';
+
+    // scroll hint
+    scrollHint.style.opacity = p < 0.04 ? String(1 - p * 25) : '0';
+
+    // video scrub
+    if (video.duration > 0) {
+      const target = p * video.duration;
+      if (Math.abs(video.currentTime - target) > 0.04) {
+        video.currentTime = target;
+      }
+      playOverlay.classList.toggle('visible', p <= 0.015 || p >= 0.985);
+    }
+
+    // video scale 0.82 → 1.0
+    const scale = 0.82 + ease(Math.min(p / 0.18, 1)) * 0.18;
+    videoWrap.style.setProperty('--vscale', scale);
+
+    // panels
+    panels.forEach((panel, i) => {
+      const [start, end] = panelWindows[i];
+      const mid = (start + end) / 2;
+      let opacity = 0, ty = 40;
+
+      if (p >= start && p <= mid) {
+        const e = ease((p - start) / (mid - start));
+        opacity = e;
+        ty = 40 - e * 40;
+      } else if (p > mid && p <= end) {
+        const e = ease((p - mid) / (end - mid));
+        opacity = 1 - e;
+        ty = -e * 28;
+      }
+
+      panel.style.opacity   = opacity;
+  panel.style.transform = `translateY(${ty}px)`;
+    });
+
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }, { passive: true });
+
+  update();
+})();
+/* ======= END SCROLL VIDEO SOROR ======= */
 </script>
 </body>
 </html>
